@@ -1,14 +1,13 @@
 const express = require('express');
 const app = express();
 const mongoose = require('mongoose');
-const dotenv = require('dotenv');
 const cookieSession = require('cookie-session');
 const passport = require('passport');
 
+const keys = require('./config/keys');
 require('./services/passport');
 
-dotenv.config();
-mongoose.connect(process.env.CONNECT_DB || 'mongodb://localhost/picexchange', {
+mongoose.connect(keys.mongoURI || 'mongodb://localhost/picexchange', {
    useNewUrlParser: true,
    useUnifiedTopology: true,
    useFindAndModify: false,
@@ -25,7 +24,7 @@ app.use(express.static(__dirname + '/public/uploads'));
 app.use(
    cookieSession({
       maxAge: 30 * 24 * 60 * 60 * 1000,
-      keys: [process.env.COOKIE_KEY],
+      keys: [keys.cookieKey],
    })
 );
 app.use(passport.initialize());
@@ -34,6 +33,14 @@ app.use(passport.session());
 /* Route middleware */
 app.use('/auth', authRoutes);
 app.use('/images', imageRoutes);
+
+if (process.env.NODE_ENV === 'production') {
+   app.use(express.static('client/build'));
+   // If unknown route, serve index.html
+   app.get('*', (req, res) => {
+      res.sendFile(path.resolve(__dirname, 'client', 'public', 'index.html'));
+   });
+}
 
 const PORT = process.env.PORT || 5000;
 app.listen(PORT);
