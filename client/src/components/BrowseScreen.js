@@ -28,7 +28,7 @@ class TitlebarGridList extends Component {
                         e.preventDefault();
                      }}
                      style={{ width: '100%', height: 'auto', margin: 'auto' }}
-                     src={`https://pic-exchange-demo.herokuapp.com/${tile.filename}`}
+                     src={tile.path}
                      alt={'placeholder'}
                   />{' '}
                   <div style={{ padding: '5px' }}>

@@ -1,5 +1,9 @@
+const url = require('url');
+const aws = require('aws-sdk');
+
 const Image = require('../models/Image');
 const User = require('../models/User');
+const keys = require('../config/keys');
 
 let ImageController = {
    upload: async (req, res) => {
@@ -7,9 +11,10 @@ let ImageController = {
          return res.status(500).send(err.message);
       });
 
+      console.log(req.file.path);
       const image = new Image({
-         filename: req.file.filename,
-         path: req.file.path,
+         filename: req.file.filename || req.file.key,
+         path: req.file.filename ? formatLocalPath(req.file.filename) : req.file.location,
          uploader: user,
          description: req.body.description ? req.body.description : null,
       });
@@ -21,12 +26,10 @@ let ImageController = {
          await user.save();
          return res.status(201).send('Image uploaded successfully');
       } catch (err) {
-         console.log(err);
          return res.status(500).send(err.message);
       }
    },
    index: async (req, res) => {
-      // This definitely isn't the way to go at large scale, but good enough for now
       const allImages = await Image.find()
          .populate({ path: 'uploader', select: 'username -_id' })
          .catch((err) => {
@@ -48,7 +51,27 @@ let ImageController = {
             await image.save();
             user.downloadCredits -= 1;
             await user.save();
-            return res.status(200).download(image.path);
+
+            if (process.env.NODE_ENV === 'production') {
+               const s3 = new aws.S3({
+                  secretAccessKey: keys.s3AccessSecret,
+                  accessKeyId: keys.s3AccessKey,
+                  region: 'us-east-2',
+               });
+               res.attachment(image.filename);
+               var file = s3
+                  .getObject({
+                     Bucket: 'pic-exchange-demo',
+                     Key: image.filename,
+                  })
+                  .createReadStream()
+                  .on('error', (error) => {
+                     console.log(error);
+                  });
+               return file.pipe(res);
+            }
+
+            return res.status(200).download('public\\uploads\\' + image.filename);
          } catch (err) {
             return res.status(500).send(err.message);
          }
@@ -57,4 +80,9 @@ let ImageController = {
       }
    },
 };
+
+function formatLocalPath(filename) {
+   return `http://localhost:${keys.port}/${filename}`;
+}
+
 module.exports = ImageController;

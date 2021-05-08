@@ -25,13 +25,13 @@ class FileDownloader extends Component {
          },
          responseType: 'blob',
       });
-      // TODO: catch axios errors
 
       const url = window.URL.createObjectURL(
          new Blob([res.data], {
             type: res.headers['content-type'],
          })
       );
+
       const link = document.createElement('a');
       link.href = url;
       link.setAttribute('download', this.props.filename);

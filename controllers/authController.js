@@ -46,7 +46,7 @@ let AuthController = {
       })(req, res, next);
    },
    logout: async (req, res) => {
-      req.logout();
+      req.logOut();
       res.redirect('/');
    },
    currentUser: async (req, res) => {
