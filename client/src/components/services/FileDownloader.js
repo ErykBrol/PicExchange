@@ -19,12 +19,16 @@ class FileDownloader extends Component {
    };
    handleClick = async () => {
       this.setState({ filename: this.props.filename });
-      const res = await axios.get(`/images/${this.props.fileId}/download`, {
-         params: {
-            username: this.props.auth.username,
-         },
-         responseType: 'blob',
-      });
+      const res = await axios
+         .get(`/images/${this.props.fileId}/download`, {
+            params: {
+               username: this.props.auth.username,
+            },
+            responseType: 'blob',
+         })
+         .catch((err) => {
+            alert('You must be logged in to download images!');
+         });
 
       const url = window.URL.createObjectURL(
          new Blob([res.data], {
