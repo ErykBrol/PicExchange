@@ -28,22 +28,19 @@ To run this application, you'll need:
    >
    > If you have brew, simply install MongoDB with : `$ brew install mongodb`
 
-The MongoDB URI, CookieKey, and Port keys can be added to your environment variables or can be stored in a keys.js file in ./config
-The expected environment variable names are:
+The MongoDB URI, CookieKey, and Port keys can be added in a dev.js file in the ./config directory, see ./config/prod.js for an example of how to do this.
+There is a sample dev.js file provided, feel free to change the values in there to your liking.
 
--  MONGO_URI
--  COOKIE_KEY
--  PORT
-
-   > ### Note
-   >
-   > If you're using a local install of MongoDB then you can set the MONGO_URI key to something like `MONGO_URI='mongodb://localhost/my_database'`. You do _NOT_ need a MongoDB account to use the local method.
+> ### Note
+>
+> If you're using a local install of MongoDB then you can set the MONGO URI key to something like `mongodb://localhost/my_database`. You do \_NOT\* need a MongoDB account to use this local method.
 
 ### Getting Started
 
 To get the frontend and backend run locally:
 
 -  Clone this repo
+-  Set up ./config/dev.js as mentioned above
 -  `npm install` to install all back-end required dependencies
 -  `cd client` to navigate to front-end directory
 -  `npm install` to install all front-end required dependencies

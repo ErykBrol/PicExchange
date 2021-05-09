@@ -117,4 +117,4 @@ dist
 
 # my stuff
 client/node_modules
-config/dev.js
+public

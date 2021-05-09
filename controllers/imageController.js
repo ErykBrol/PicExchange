@@ -11,7 +11,6 @@ let ImageController = {
          return res.status(500).send(err.message);
       });
 
-      console.log(req.file.path);
       const image = new Image({
          filename: req.file.filename || req.file.key,
          path: req.file.filename ? formatLocalPath(req.file.filename) : req.file.location,
@@ -65,8 +64,8 @@ let ImageController = {
                      Key: image.filename,
                   })
                   .createReadStream()
-                  .on('error', (error) => {
-                     console.log(error);
+                  .on('error', (err) => {
+                     res.send({ msg: 'AWS error', err });
                   });
                return file.pipe(res);
             }

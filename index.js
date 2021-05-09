@@ -4,11 +4,12 @@ const mongoose = require('mongoose');
 const cookieSession = require('cookie-session');
 const passport = require('passport');
 const path = require('path');
+var fs = require('fs');
 
 const keys = require('./config/keys');
 require('./services/passport');
 
-mongoose.connect(keys.mongoURI || 'mongodb://localhost/picexchange', {
+mongoose.connect(keys.mongoURI, {
    useNewUrlParser: true,
    useUnifiedTopology: true,
    useFindAndModify: false,
@@ -41,6 +42,12 @@ if (process.env.NODE_ENV === 'production') {
    app.get('*', (req, res) => {
       res.sendFile(path.resolve(__dirname, 'client', 'build', 'index.html'));
    });
+} else {
+   // Make the local image repo if it doesn't exist
+   const path = './public/uploads';
+   if (!fs.existsSync(path)) {
+      fs.mkdirSync(path, { recursive: true });
+   }
 }
 
 app.listen(keys.port);
