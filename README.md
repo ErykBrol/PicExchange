@@ -6,6 +6,11 @@ Using a system of credits, users acquire credits for uploading images to the app
 
 This project is currently hosted at https://pic-exchange-demo.herokuapp.com/
 
+## Screenshots
+
+![Sign-in page](https://i.imgur.com/FfJByxO.png)
+![Image browsing page](https://i.imgur.com/wP9KmgV.png)
+
 ## Built With
 
 -  [React](https://reactjs.org/) - Framework used to design the front-end UI
@@ -33,7 +38,7 @@ There is a sample dev.js file provided, feel free to change the values in there 
 
 > ### Note
 >
-> If you're using a local install of MongoDB then you can set the MONGO URI key to something like `mongodb://localhost/my_database`. You do \_NOT\* need a MongoDB account to use this local method.
+> If you're using a local install of MongoDB then you can set the MONGO URI key to something like `mongodb://localhost/my_database`. You do **NOT** need a MongoDB account to use this local method.
 
 ### Getting Started
 
