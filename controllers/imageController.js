@@ -1,5 +1,6 @@
 const url = require('url');
 const aws = require('aws-sdk');
+const path = require('path');
 
 const Image = require('../models/Image');
 const User = require('../models/User');
@@ -32,12 +33,10 @@ let ImageController = {
    index: async (req, res) => {
       const allImages = await Image.find()
          .populate({ path: 'uploader', select: 'username -_id' })
-         .then(() => {
-            return res.status(200).send(allImages);
-         })
          .catch((err) => {
             return res.status(500).send({ msg: 'Error getting images', err });
          });
+      return res.status(200).send(allImages);
    },
    download: async (req, res) => {
       const user = await User.findOne({ username: req.user.username }).catch((err) => {
@@ -79,12 +78,12 @@ let ImageController = {
             }
 
             // Locally stored specific code to download an image, sends as a blob
-            return res.status(200).download('public\\uploads\\' + image.filename);
+            return res.status(200).download(path.join('public', 'uploads', image.filename));
          } catch (err) {
             return res.status(500).send({ err: 'Error downloading image', err });
          }
       } else {
-         return res.status(403).send({ err: 'Insufficient credits to download image' });
+         return res.status(403).send({ msg: 'Insufficient credits to download image' });
       }
    },
    update: async (req, res) => {
@@ -92,14 +91,10 @@ let ImageController = {
          return res.status(500).send({ msg: "Couldn't find image", err });
       });
       if (!isOwner(image.uploader, req.user._id)) return res.status(401).send({ msg: 'Unauthorized', err });
-      await image
-         .updateOne({ $set: { description: req.body.description } })
-         .then(() => {
-            return res.status(200).send({ msg: 'Image updated successfully' });
-         })
-         .catch((err) => {
-            return res.status(500).send({ msg: "Couldn't find image", err });
-         });
+      await image.updateOne({ $set: { description: req.body.description } }).catch((err) => {
+         return res.status(500).send({ msg: "Couldn't find image", err });
+      });
+      return res.status(200).send({ msg: 'Image updated successfully' });
    },
    delete: async (req, res) => {
       const image = await Image.findById(req.params.id).catch((err) => {
@@ -128,12 +123,10 @@ let ImageController = {
    getUserImages: async (req, res) => {
       const userImages = await Image.find({ uploader: req.params.user_id })
          .populate({ path: 'uploader', select: 'username -_id' })
-         .then(() => {
-            return res.status(200).send(userImages);
-         })
          .catch((err) => {
             return res.status(500).send({ msg: "Error getting user's images", err });
          });
+      return res.status(200).send(userImages);
    },
 };
 

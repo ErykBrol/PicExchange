@@ -31,7 +31,11 @@ To run this application, you'll need:
 
    > ### Note
    >
-   > If you have brew, simply install MongoDB with : `$ brew install mongodb`
+   > If you have brew, install MongoDB with the following steps:
+   >
+   > -  `brew tap mongodb/brew` to add tap
+   > -  `brew install mongodb-community` to install MongoDB
+   > -  `brew services start mongodb-community` to start the MongoDB service (stop it with `brew services stop mongodb-community`)
 
 The MongoDB URI, CookieKey, and Port keys can be added in a dev.js file in the ./config directory, see ./config/prod.js for an example of how to do this.
 There is a sample dev.js file provided, feel free to change the values in there to your liking.
@@ -45,7 +49,7 @@ There is a sample dev.js file provided, feel free to change the values in there 
 To get the frontend and backend run locally:
 
 -  Clone this repo
--  Set up ./config/dev.js as mentioned above
+-  Modify ./config/dev.js if desired (see Prerequisites for details)
 -  `npm install` to install all back-end required dependencies
 -  `cd client` to navigate to front-end directory
 -  `npm install` to install all front-end required dependencies
@@ -66,16 +70,25 @@ The application provides an API in order to easily access some of the informatio
 
 Authentication Routes:
 
--  POST /auth/register
--  POST /auth/login
--  GET /auth/logout
--  GET /auth/current_user
+-  `POST /auth/login` - sign in using username + password to an existing account
+-  `GET /auth/logout` - sign out of the currently signed in account
+-  `GET /auth/current_user` - get some basic info about currently signed in user (if any)
 
 Image Routes:
 
--  POST /images/upload
--  GET /images/
--  GET /images/:id/download
+-  `POST /images/upload` - upload an image, store info about image in Image model and a ref to it in user model (free for image owner)
+-  `GET /images/` - get all images for "browse" screen
+-  `GET /images/:id/download` - download the specified image
+-  `PATCH /images/:id` - update the description of the specified image (only doable by image owner)
+-  `DEL /images/:id` - delete the specified image (only doable by image owner)
+-  `GET /images/user/:user_id` - get all the images uploaded by the specified user
+
+User Routes:
+
+-  `POST /user/register` - Register for a new account with this username + password
+-  `GET /user/:user_id` - Get user info of the specified user
+-  `DEL /user/:user_id` - Delete the specified user
+-  `PATCH /user/:user_id` - Update the role of the specified user
 
 ## Contributing
 

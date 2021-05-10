@@ -15,6 +15,7 @@ import CssBaseline from '@material-ui/core/CssBaseline';
 import Menu from '@material-ui/core/Menu';
 import MenuItem from '@material-ui/core/MenuItem';
 import BrokenImageIcon from '@material-ui/icons/BrokenImage';
+import Tooltip from '@material-ui/core/Tooltip';
 
 import FileUploader from './services/FileUploader';
 
@@ -98,12 +99,14 @@ class Navbar extends Component {
       if (auth) {
          return (
             <Fragment>
-               <Button color="inherit" className={classes.rightSideButtons}>
-                  <Typography variant="h6" className={classes.title}>
-                     {`${auth.downloadCredits}`}
-                  </Typography>
-                  <StarIcon />
-               </Button>
+               <Tooltip title="Spend credits to download images. Gain credits by uploading images." aria-label="add">
+                  <Button color="inherit" className={classes.rightSideButtons}>
+                     <Typography variant="h6" className={classes.title}>
+                        {`${auth.downloadCredits}`}
+                     </Typography>
+                     <StarIcon />
+                  </Button>
+               </Tooltip>
                <FileUploader />
                <Button
                   aria-controls="simple-menu"

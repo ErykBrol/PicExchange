@@ -23,7 +23,9 @@ class FileUploader extends Component {
       formData.append('image', selectedFile);
       formData.append('uploader', this.props.auth.username);
 
-      await axios.post('/images/upload', formData);
+      await axios.post('/images/upload', formData).catch((err) => {
+         alert(err.msg);
+      });
       this.props.fetchUser();
       this.props.fetchImages();
    };

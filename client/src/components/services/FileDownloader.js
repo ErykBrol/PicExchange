@@ -6,6 +6,8 @@ import Button from '@material-ui/core/Button';
 import { withStyles } from '@material-ui/core/styles';
 import GetAppRoundedIcon from '@material-ui/icons/GetAppRounded';
 
+import * as actions from '../../actions';
+
 const useStyles = (theme) => ({
    rightSideButtons: {
       marginLeft: 'auto',
@@ -16,31 +18,34 @@ const useStyles = (theme) => ({
 class FileDownloader extends Component {
    state = {
       filename: '',
+      err: false,
    };
    handleClick = async () => {
-      this.setState({ filename: this.props.filename });
+      this.setState({ filename: this.props.filename, err: false });
       const res = await axios
          .get(`/images/${this.props.fileId}/download`, {
-            params: {
-               username: this.props.auth.username,
-            },
             responseType: 'blob',
          })
          .catch((err) => {
-            alert('You must be logged in to download images!');
+            this.setState({ err: true });
+            if (!this.props.auth) alert('You must be logged in to download images!');
+            if (err.response.status === 403) alert("You don't have enough credits. Upload some images to gain more!");
          });
 
-      const url = window.URL.createObjectURL(
-         new Blob([res.data], {
-            type: res.headers['content-type'],
-         })
-      );
+      if (!this.state.err) {
+         const url = window.URL.createObjectURL(
+            new Blob([res.data], {
+               type: res.headers['content-type'],
+            })
+         );
 
-      const link = document.createElement('a');
-      link.href = url;
-      link.setAttribute('download', this.props.filename);
-      document.body.appendChild(link);
-      link.click();
+         const link = document.createElement('a');
+         link.href = url;
+         link.setAttribute('download', this.props.filename);
+         document.body.appendChild(link);
+         link.click();
+         this.props.fetchUser();
+      }
    };
 
    render() {
@@ -57,4 +62,4 @@ function mapStateToProps({ auth }) {
    return { auth };
 }
 
-export default compose(withStyles(useStyles), connect(mapStateToProps))(FileDownloader);
+export default compose(withStyles(useStyles), connect(mapStateToProps, actions))(FileDownloader);

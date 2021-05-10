@@ -28,32 +28,34 @@ let UserController = {
       }
    },
    getUser: async (req, res) => {
-      const user = await User.findById(req.params.user_id)
-         .then(() => {
-            return res.send(user.clientUserData);
-         })
-         .catch((err) => {
-            return res.status(500).send({ msg: 'Error fetching user', err });
-         });
+      const user = await User.findById(req.params.user_id).catch((err) => {
+         return res.status(500).send({ msg: 'Error fetching user', err });
+      });
+      return res.send(user.clientUserData);
    },
    delete: async (req, res) => {
-      await User.findByIdAndDelete(req.params.user_id)
-         .then(() => {
-            return res.status(200).send({ msg: 'User successfully deleted' });
-         })
-         .catch((err) => {
-            return res.status(500).send({ msg: 'Error deleting user', err });
-         });
+      await User.findByIdAndDelete(req.params.user_id).catch((err) => {
+         return res.status(500).send({ msg: 'Error deleting user', err });
+      });
+      return res.status(200).send({ msg: 'User successfully deleted' });
    },
    update: async (req, res) => {
-      await User.findByIdAndUpdate(req.params.user_id, { $set: { role: req.body.role } }, { runValidators: true })
-         .then(() => {
-            return res.status(200).send({ msg: 'User successfully updated' });
-         })
-         .catch((err) => {
-            return res.status(500).send({ msg: 'Error updating user', err });
-         });
+      if (!isAdmin(req.user)) {
+         return res.status(401).send({ msg: 'Unauthorized' });
+      }
+      await User.findByIdAndUpdate(
+         req.params.user_id,
+         { $set: { role: req.body.role } },
+         { runValidators: true }
+      ).catch((err) => {
+         return res.status(500).send({ msg: 'Error updating user', err });
+      });
+      return res.status(200).send({ msg: 'User successfully updated' });
    },
 };
+
+function isAdmin(user) {
+   return user.role.toString() === 'admin';
+}
 
 module.exports = UserController;

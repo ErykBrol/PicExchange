@@ -5,10 +5,10 @@ const UserController = require('../controllers/userController');
 /**
  * User controller handles all the logic for the user-related routes
  *
- * POST /register       - Register for a new account with this username + password
- * GET /:user_id        - Get user info of the specified user
- * DEL /:user_id        - Delete the specified user
- * PATCH /:user_id      - Upadte the role of the specified user
+ * POST /user/register       - Register for a new account with this username + password
+ * GET /user/:user_id        - Get user info of the specified user
+ * DEL /user/:user_id        - Delete the specified user
+ * PATCH /user/:user_id      - Update the role of the specified user
  *
  */
 router.post('/register', UserController.register);

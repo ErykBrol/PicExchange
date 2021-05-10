@@ -47,14 +47,19 @@ class SignIn extends Component {
    };
 
    handleSubmit = () => {
-      this.props.loginUser({ username: this.state.username, password: this.state.password }).then((result) => {
-         this.setState({ error: result ? '' : 'Invalid username or password' });
-         if (result) {
-            this.props.history.push({
-               pathname: '/',
-            });
-         }
-      });
+      this.props
+         .loginUser({ username: this.state.username, password: this.state.password })
+         .then((result) => {
+            this.setState({ error: result ? '' : 'Invalid username or password' });
+            if (result) {
+               this.props.history.push({
+                  pathname: '/',
+               });
+            }
+         })
+         .catch((err) => {
+            alert(err.response.data.msg);
+         });
    };
 
    render() {

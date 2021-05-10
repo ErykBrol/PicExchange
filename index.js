@@ -23,7 +23,7 @@ const imageRoutes = require('./routes/imageRoutes');
 
 /* Middleware */
 app.use(express.json());
-app.use(express.static(__dirname + '/public/uploads'));
+app.use(express.static(path.resolve(__dirname, 'public', 'uploads')));
 app.use(
    cookieSession({
       maxAge: 30 * 24 * 60 * 60 * 1000,
@@ -46,9 +46,9 @@ if (process.env.NODE_ENV === 'production') {
    });
 } else {
    // Make the local image repo if it doesn't exist
-   const path = './public/uploads';
-   if (!fs.existsSync(path)) {
-      fs.mkdirSync(path, { recursive: true });
+   const dir = path.resolve(__dirname, 'public', 'uploads');
+   if (!fs.existsSync(dir)) {
+      fs.mkdirSync(dir, { recursive: true });
    }
 }
 
