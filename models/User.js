@@ -23,7 +23,7 @@ const userSchema = new Schema({
    },
    role: {
       type: String,
-      enum: { values: Object.values(ROLES), message: '{VALUE} is not supported' },
+      enum: ROLES,
       default: 'user',
    },
    images: [{ type: Schema.Types.ObjectId, ref: 'images' }],

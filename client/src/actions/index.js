@@ -8,7 +8,7 @@ export const fetchUser = () => async (dispatch) => {
 
 // userData should contain 2 things: username, password for the user being registered
 export const registerUser = (userData) => async (dispatch) => {
-   const res = await axios.post('/auth/register', userData);
+   const res = await axios.post('/user/register', userData);
 
    if (res.status !== 201) {
       return false;

@@ -18,6 +18,7 @@ mongoose.connect(keys.mongoURI, {
 
 /* Import routes */
 const authRoutes = require('./routes/authRoutes');
+const userRoutes = require('./routes/userRoutes');
 const imageRoutes = require('./routes/imageRoutes');
 
 /* Middleware */
@@ -34,6 +35,7 @@ app.use(passport.session());
 
 /* Route middleware */
 app.use('/auth', authRoutes);
+app.use('/user', userRoutes);
 app.use('/images', imageRoutes);
 
 if (process.env.NODE_ENV === 'production') {
